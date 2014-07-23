@@ -163,13 +163,15 @@ module.exports = function (grunt) {
         // Automatically inject Bower components into the app
         wiredep: {
             options: {
-                cwd: '<%= yeoman.app %>'
+                cwd: '<%= yeoman.app %>',
             },
             app: {
+                exclude: ['jquery', 'bootstrap-sass'],
                 src: ['<%= yeoman.app %>/index.html'],
                 ignorePath:  /\.\.\//
             },
             sass: {
+                exclude: ['jquery', 'bootstrap-sass'],
                 src: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
                 ignorePath: /(\.\.\/){1,2}bower_components\//
             }
@@ -180,7 +182,7 @@ module.exports = function (grunt) {
         sass: {
             dist: {
                 options: {
-                    // includePaths: ['/bower_components/bootstrap-sass/lib/'],
+                    includePaths: ['./bower_components/bootstrap-sass/lib/'],
                     outputStyle: 'expanded',
                     sourceComments: 'normal'
                 },
