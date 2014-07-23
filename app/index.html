@@ -10,9 +10,10 @@
     <!-- bower:css -->
     <!-- endbower -->
     <!-- endbuild -->
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
+    <!-- build:css(.tmp) styles/life.css -->
+    <link rel="stylesheet" href="styles/life.css">
     <!-- endbuild -->
+    <link href='//fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
   </head>
   <body ng-app="lifegraphApp">
     <!--[if lt IE 7]>
@@ -21,20 +22,9 @@
 
     <!-- Add your site or application content here -->
     <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a ng-href="#">Home</a></li>
-          <li><a ng-href="#">About</a></li>
-          <li><a ng-href="#">Contact</a></li>
-        </ul>
-        <h3 class="text-muted">lifegraph</h3>
-      </div>
 
       <div ng-include="'views/main.html'" ng-controller="MainCtrl"></div>
 
-      <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-      </div>
     </div>
 
 
@@ -61,6 +51,7 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/json3/lib/json3.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

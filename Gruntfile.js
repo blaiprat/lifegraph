@@ -185,7 +185,7 @@ module.exports = function (grunt) {
                     sourceComments: 'normal'
                 },
                 files: {
-                    'tmp/styles/life.css': '<%= yeoman.app %>/styles/life.scss',
+                    '.tmp/styles/life.css': '<%= yeoman.app %>/styles/life.scss',
                 }
             }
         },
