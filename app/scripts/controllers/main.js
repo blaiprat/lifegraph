@@ -5,13 +5,13 @@
  * @name lifegraphApp.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the lifegraphApp
+ * Controller of the lifegraphApp. Testing
  */
 angular.module('lifegraphApp')
-  .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+    .controller('MainCtrl', function ($scope) {
+        $scope.awesomeThings = [
+            'HTML5 Boilerplate',
+            'AngularJS',
+            'Karma'
+        ];
+    });

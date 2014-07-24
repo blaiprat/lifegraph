@@ -34,10 +34,12 @@ module.exports = function (grunt) {
                 tasks: ['wiredep']
             },
             js: {
+
                 files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
                 tasks: ['newer:jshint:all'],
                 options: {
-                    livereload: '<%= connect.options.livereload %>'
+                    livereload: '<%= connect.options.livereload %>',
+                    spawn: false
                 }
             },
             jsTest: {
@@ -45,6 +47,9 @@ module.exports = function (grunt) {
                 tasks: ['newer:jshint:test', 'karma']
             },
             sass: {
+                options: {
+                    spawn: false
+                },
                 files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
                 tasks: ['sass', 'autoprefixer']
             },
@@ -257,6 +262,26 @@ module.exports = function (grunt) {
         // concat: {
         //   dist: {}
         // },
+
+        ngdocs: {
+            options: {
+                dest: 'app/docs/',
+                html5Mode: true,
+                startPage: '/api',
+                title: 'My Documentation',
+                analytics: {
+                      account: 'UA-08150815-0',
+                      domainName: 'my-domain.com'
+                },
+                discussions: {
+                      shortName: 'my',
+                      url: 'http://my-domain.com',
+                      dev: false
+                }
+            },
+            all: ['<%= yeoman.app %>/scripts/{,*/}*.js']
+        },
+
 
         imagemin: {
             dist: {
