@@ -2,20 +2,33 @@
 angular.module('lifegraphApp')
     .directive('graphLife', function() {
 
+    var optionsForNewNode = [
+        'Move to another company?',
+        'Move to another team?',
+        'Try for promotion?',
+        'Steady progress?',
+        'Create a new initiative?',
+        'Go part time?',
+        'Retrain?',
+    ];
+
     var transitionTime = 300;
     var nodes = [
         {
             name: 'node1',
             angle: 0,
+            distance: 100,
             x: 100,
             y: 100
         },
         {
             name: 'node2',
+            distance: 100,
             angle: 0,
         },
         {
             name: 'node2',
+            distance: 100,
             angle: 45,
         }
     ];
@@ -38,8 +51,7 @@ angular.module('lifegraphApp')
 
 
     var prepareNodes = function(){
-        var previousNode,
-            radius = 100;
+        var previousNode;
 
         nodes.forEach(function(node){
 
@@ -48,8 +60,8 @@ angular.module('lifegraphApp')
                 var py = previousNode.y;
                 var angle = node.angle;
 
-                var nx = (Math.cos(angle * (Math.PI /180)) * radius) + px;
-                var ny = (Math.sin(angle * (Math.PI/180)) * radius) + py;
+                var nx = (Math.cos(angle * (Math.PI /180)) * node.distance) + px;
+                var ny = (Math.sin(angle * (Math.PI/180)) * node.distance) + py;
 
                 node.x = nx;
                 node.y = ny;
@@ -73,14 +85,21 @@ angular.module('lifegraphApp')
                 nodes.forEach(function(node){
                     if (node.isBeingDragged){
                         node.isBeingDragged = undefined;
+
                         var deltaX = node.x - previousNode.x;
                         var deltaY = node.y - previousNode.y;
+
+
+                        var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
                         var angleInDegrees = Math.atan2(deltaY,  deltaX) * 180 / Math.PI;
 
                         var roundedAngle = Math.round(angleInDegrees / 45) * 45;
 
                         node.angle = roundedAngle;
+
+                        console.log('distance', distance);
+                        node.distance = distance;
 
                     }
 
@@ -96,36 +115,73 @@ angular.module('lifegraphApp')
 
                 var currentNode,
                     currentX,
-                    currentY;
+                    currentY,
+                    targetNode,
+                    isAddingNode = false;
 
-                actions.mouseDown = function(){
-                    console.log('mouse is down');
+                actions.mouseDown = function(e, d, a){
                     actions.isMouseDown = true;
-                    currentNode = addNode();
+                    currentNode = e;
+                    console.log('e', e, d, a);
+                };
+
+                actions.mouseDownAlt = function(){
+                    hideNodes();
+                    actions.isMouseDown = true;
+                    currentNode = nodes[nodes.length-1];
+                    isAddingNode = true;
+                    targetNode = addNode();
+                    targetNode.x = currentX;
+                    targetNode.y = currentY;
+                    targetNode.isBeingDragged = true;
                     actionUpdate();
+                    normalizeNodes();
                     buildNodes();
                     buildLines();
                 };
 
-                actions.mouseUp = function(){
+                actions.mouseUp = function(e){
                     if (!actions.isMouseDown) { return; }
-                    actions.isMouseDown = false;
-                    console.log('mouse is up');
-                    normalizeNodes();
-                    currentNode = undefined;
-                };
 
-                actions.mouseMove = function(){
-                    var coords = d3.mouse(this);
+                    var coords = d3.mouse(svgGroups.actions[0][0]);
                     currentX = coords[0];
                     currentY = coords[1];
+
+                    actions.isMouseDown = false;
+
+                    if (e.name !== undefined && !isAddingNode){
+                        popNodes(e);
+                    } else if (optionsForNewNode.indexOf(e) !== -1){
+                        targetNode = addNode();
+                        targetNode.x = currentX;
+                        targetNode.y = currentY;
+                        buildNodes();
+                        buildLines();
+                        console.log('its a new node', targetNode, currentX, currentY);
+                    }
+
+                    isAddingNode = false;
+                    console.log('mouse is up');
+                    normalizeNodes();
+                    targetNode = undefined;
+                };
+
+                actions.mouseMove = function(e){
+                    var coords = d3.mouse(svgGroups.actions[0][0]);
+                    currentX = coords[0];
+                    currentY = coords[1];
+
+                    if (e && e.name){
+                        console.log('e.name', e.name);
+                    }
+
                 };
 
                 var actionUpdate = function(){
                     if (actions.isMouseDown) {
-                        if (currentNode){
-                            currentNode.x = currentX;
-                            currentNode.y = currentY;
+                        if (targetNode){
+                            targetNode.x = currentX;
+                            targetNode.y = currentY;
                             buildNodes();
                             buildLines();
                         }
@@ -140,7 +196,8 @@ angular.module('lifegraphApp')
                 var newNode = {
                     name: 'node4',
                     angle: 0,
-                    isBeingDragged: true
+                    isBeingDragged: true,
+                    distance: 100
                 };
 
                 nodes.push(newNode);
@@ -203,6 +260,71 @@ angular.module('lifegraphApp')
 
             };
 
+
+            var popNodes = function(node){
+                var x = node.x,
+                    y = node.y;
+
+
+                var svgNodesPop = svgGroups.nodes.selectAll('.node-pop')
+                    .data(optionsForNewNode);
+
+
+                console.log('popping nodes', x, y);
+
+                //creation
+                svgNodesPop
+                    .enter()
+                    .append('g')
+                    .attr('class', 'node-pop')
+                    .attr('transform', 'translate('+x+', '+y+')')
+                    .attr('opacity', 0)
+                    .attr('y', y)
+                    .append('circle')
+                    .attr('r', 10)
+                    .on('mousedown', actions.mouseDownAlt)
+                    .on('mousemove', actions.mouseMove)
+                    .on('mouseup', actions.mouseUp);
+
+                svgNodesPop
+                    .append('text')
+                    .text(function(d){
+                        return d;
+                    })
+                    .attr('x', 20);
+
+                // remove
+                svgNodesPop
+                    .exit()
+                    .remove();
+
+
+
+                svgNodesPop
+                    .transition()
+                    .duration(300)
+                    .delay(function(d, i){
+                        return i * 25;
+                    })
+                    .attr('transform', function(d, i){
+                        var ny =y + (i * 50 - 30);
+                        return  'translate('+ (x + 75) +',' + ny+ ')';
+                    })
+                    .attr('opacity', 1);
+
+
+            };
+
+            var hideNodes = function(){
+                var svgNodesPop = svgGroups.nodes.selectAll('.node-pop');
+
+                svgNodesPop
+                    .transition()
+                    .duration(300)
+                    .attr('opacity', 0)
+                    .remove();
+            };
+
             var buildLines = function(){
                 svgLines = svgGroups.lines.selectAll('.line')
                     .data(links);
@@ -252,7 +374,7 @@ angular.module('lifegraphApp')
                     .append('rect')
                     .attr('width', settings.width)
                     .attr('height', settings.height)
-                    .attr('fill', 'rgba(0,0,0,1)')
+                    .attr('fill', 'rgba(0,0,0,0)')
                     .on('mousemove', actions.mouseMove)
                     .on('mouseup', actions.mouseUp);
 

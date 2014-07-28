@@ -27,12 +27,39 @@ body {
     color: #FFF;
 }
 
-.header {
+%floating {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 20px;
+    left: 20px;
+}
+.header {
+    @extend %floating;
+    // left: 20px;
+    font-weight: 100;
+    max-width: 1020px;
+    margin: auto;
+    text-transform: uppercase;
 }
 
+.background {
+    @extend %floating;
+}
+.actions {
+    @extend %floating;
+    .more-info {
+        background: #FFF;
+        border-radius: 10px;
+        color: $color-background;
+        padding: 10px;
+
+        h3 {
+            margin-top: 0;
+        }
+        p {
+            margin-bottom: 0;
+        }
+    }
+}
 h1 {
     margin: 0;
 }
@@ -41,6 +68,21 @@ h1 {
     fill: $color-background;
     stroke: #FFF;
     stroke-width: 10px;
+    &.node-dragged {
+        // pointer-events: none;
+    }
+}
+
+.node-pop {
+
+    circle {
+        @extend .node;
+        stroke: rgba(#FFF, .7);
+    }
+    text {
+        fill: #FFF;
+        text-transform: uppercase;
+    }
 }
 
 .line {
@@ -48,3 +90,7 @@ h1 {
     stroke-width: 10px;
 }
 
+.graph-life {
+    position: relative;
+    z-index: 5;
+}
