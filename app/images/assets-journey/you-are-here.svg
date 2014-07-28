@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="502px" height="371px" viewBox="0 0 502 371" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.0.3 (7891) - http://www.bohemiancoding.com/sketch -->
+    <title>you-are-here</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="7" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.35 0" in="shadowBlurOuter1" type="matrix" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="you-are-here" sketch:type="MSLayerGroup" transform="translate(23.000000, 23.000000)">
+            <path d="M420.000744,210 C479.635924,174.653776 481.607779,146 424.405006,146 C367.202232,146 272.486357,174.653776 212.851177,210 C153.215997,245.346224 97.2454767,331.085937 112.133088,331.085937 C127.020698,331.085937 360.365565,245.346224 420.000744,210 Z" id="Oval-46" fill="white" filter="url(#filter-1)" sketch:type="MSShapeGroup"></path>
+            <path d="M112.5,325.150971 C128.670502,325.150971 225,174.52715 225,112.432432 C225,50.3377146 174.632034,0 112.5,0 C50.3679656,0 0,50.3377146 0,112.432432 C0,174.52715 96.3294983,325.150971 112.5,325.150971 Z" id="Oval-47" stroke-opacity="0.368914176" stroke="#64C369" stroke-width="45" fill="#64C369" sketch:type="MSShapeGroup"></path>
+            <text id="YOU" sketch:type="MSTextLayer" font-family="Gotham" font-size="48" font-weight="bold" sketch:alignment="middle" line-spacing="40" fill="#FFFFFF">
+                <tspan x="57.964" y="98.7999611">YOU</tspan>
+                <tspan x="59.86" y="148.799961">ARE </tspan>
+                <tspan x="44.5" y="198.799961">HERE</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
