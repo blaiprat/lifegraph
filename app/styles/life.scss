@@ -43,19 +43,29 @@ body {
 
 .background {
     @extend %floating;
+    display: none;
 }
 .actions {
     @extend %floating;
+    z-index: 4;
     .more-info {
+        @extend %floating;
         background: #FFF;
         border-radius: 10px;
         color: $color-background;
         padding: 10px;
 
-        h3 {
+        display: none;
+        max-width: 400px;
+        min-width: 200px;
+
+        .more-info_header {
             margin-top: 0;
+            font-weight: 300;
+            text-transform: uppercase;
         }
-        p {
+        .more-info_body {
+            font-weight: 300;
             margin-bottom: 0;
         }
     }

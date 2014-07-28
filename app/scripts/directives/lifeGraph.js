@@ -2,6 +2,50 @@
 angular.module('lifegraphApp')
     .directive('graphLife', function() {
 
+
+    var isSelectingSomething = false;
+
+    var scales = {};
+
+    var domFuncs = (function(){
+
+        var moreInfo,
+            moreInfoHeader,
+            moreInfoBody;
+
+        var init = function(){
+            moreInfo = document.querySelector('.more-info');
+            moreInfoHeader = document.querySelector('.more-info_header');
+            moreInfoBody = document.querySelector('.more-info_body');
+        };
+
+        var update = function(options) {
+            if (isSelectingSomething) {
+                hide();
+                return;
+            }
+            console.log('update', options, moreInfo.style);
+            moreInfo.style.display = 'block';
+            moreInfo.style.top = options.y + 'px';
+            moreInfo.style.left = options.x + 'px';
+            moreInfoHeader.textContent = options.header;
+            moreInfoBody.textContent = options.description;
+        };
+
+        var hide = function(){
+            moreInfo.style.display = 'none';
+        };
+
+
+        return {
+            init: init,
+            update: update,
+            hide: hide
+        };
+    })();
+
+    domFuncs.init();
+
     var optionsForNewNode = [
         'Move to another company?',
         'Move to another team?',
@@ -15,19 +59,25 @@ angular.module('lifegraphApp')
     var transitionTime = 300;
     var nodes = [
         {
-            name: 'node1',
+            name: 'Joined Agrupacio Mutua',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis molestie tellus. Donec placerat, arcu ut tristique sodales, felis ante ullamcorper turpis, et iaculis nisi quam sed leo. Fusce pulvinar commodo turpis, vel dignissim risus placerat sit amet.',
             angle: 0,
             distance: 100,
+            year: 2001,
             x: 100,
             y: 100
         },
         {
-            name: 'node2',
+            name: 'Freelancing',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis molestie tellus. Donec placerat, arcu ut tristique sodales, felis ante ullamcorper turpis, et iaculis nisi quam sed leo. Fusce pulvinar commodo turpis, vel dignissim risus placerat sit amet.',
+            year: 2004,
             distance: 100,
             angle: 0,
         },
         {
-            name: 'node2',
+            name: 'Created Zoo',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis molestie tellus. Donec placerat, arcu ut tristique sodales, felis ante ullamcorper turpis, et iaculis nisi quam sed leo. Fusce pulvinar commodo turpis, vel dignissim risus placerat sit amet.',
+            year: 2006,
             distance: 100,
             angle: 45,
         }
@@ -50,18 +100,22 @@ angular.module('lifegraphApp')
         svgLines;
 
 
-    var prepareNodes = function(){
         var previousNode;
 
+    var prepareNodes = function(){
         nodes.forEach(function(node){
 
             if (previousNode && !!!node.isBeingDragged){
+
                 var px = previousNode.x;
                 var py = previousNode.y;
                 var angle = node.angle;
 
-                var nx = (Math.cos(angle * (Math.PI /180)) * node.distance) + px;
-                var ny = (Math.sin(angle * (Math.PI/180)) * node.distance) + py;
+                console.log('scales', scales, scales.x(node.year));
+                var nx = scales.x(node.year);
+                // var ny = (Math.sin(angle * (Math.PI/180)) * node.distance) + py;
+                var ny = (nx - px) / (Math.tan(angle));
+                console.log('ny', ny, nx - px);
 
                 node.x = nx;
                 node.y = ny;
@@ -74,7 +128,7 @@ angular.module('lifegraphApp')
     };
 
 
-    prepareNodes();
+
 
 
     return {
@@ -98,7 +152,6 @@ angular.module('lifegraphApp')
 
                         node.angle = roundedAngle;
 
-                        console.log('distance', distance);
                         node.distance = distance;
 
                     }
@@ -120,17 +173,19 @@ angular.module('lifegraphApp')
                     isAddingNode = false;
 
                 actions.mouseDown = function(e, d, a){
+                    domFuncs.hide();
                     actions.isMouseDown = true;
                     currentNode = e;
                     console.log('e', e, d, a);
                 };
 
-                actions.mouseDownAlt = function(){
+                actions.mouseDownAlt = function(e){
+                    console.log('add node', e);
                     hideNodes();
                     actions.isMouseDown = true;
                     currentNode = nodes[nodes.length-1];
                     isAddingNode = true;
-                    targetNode = addNode();
+                    targetNode = addNode(e);
                     targetNode.x = currentX;
                     targetNode.y = currentY;
                     targetNode.isBeingDragged = true;
@@ -166,6 +221,10 @@ angular.module('lifegraphApp')
                     targetNode = undefined;
                 };
 
+                actions.mouseOut = function(){
+                    domFuncs.hide();
+                };
+
                 actions.mouseMove = function(e){
                     var coords = d3.mouse(svgGroups.actions[0][0]);
                     currentX = coords[0];
@@ -173,6 +232,12 @@ angular.module('lifegraphApp')
 
                     if (e && e.name){
                         console.log('e.name', e.name);
+                        domFuncs.update({
+                            header: e.name,
+                            description: e.description,
+                            x: currentX,
+                            y: currentY
+                        });
                     }
 
                 };
@@ -192,9 +257,9 @@ angular.module('lifegraphApp')
 
             };
 
-            var addNode = function(){
+            var addNode = function(e){
                 var newNode = {
-                    name: 'node4',
+                    name: e,
                     angle: 0,
                     isBeingDragged: true,
                     distance: 100
@@ -222,7 +287,9 @@ angular.module('lifegraphApp')
 
 
             var buildScales = function(){
-
+                scales.x = d3.scale.linear()
+                    .domain([1997, 2014])
+                    .range([0, settings.width]);
             };
 
             var buildNodes = function(){
@@ -237,6 +304,7 @@ angular.module('lifegraphApp')
                     .attr('class', 'node')
                     .on('mousedown', actions.mouseDown)
                     .on('mousemove', actions.mouseMove)
+                    .on('mouseout', actions.mouseOut)
                     .on('mouseup', actions.mouseUp);
 
                 // remove
@@ -262,6 +330,8 @@ angular.module('lifegraphApp')
 
 
             var popNodes = function(node){
+
+                isSelectingSomething = true;
                 var x = node.x,
                     y = node.y;
 
@@ -316,6 +386,8 @@ angular.module('lifegraphApp')
             };
 
             var hideNodes = function(){
+
+                isSelectingSomething = false;
                 var svgNodesPop = svgGroups.nodes.selectAll('.node-pop');
 
                 svgNodesPop
@@ -385,11 +457,13 @@ angular.module('lifegraphApp')
                     .attr('class', 'nodes');
 
 
-                buildScales();
                 buildLines();
                 buildNodes();
 
             };
+            updateSettings();
+            buildScales();
+            prepareNodes();
             prepareActions();
             buildGraph();
 
