@@ -133,7 +133,6 @@ angular.module('lifegraphApp')
             kind: 0,
         }, 
 //  CAREER - OPTIONS IN PAST       
-        },
         {
             id: 20,
             name: 'Career break: gap year',
