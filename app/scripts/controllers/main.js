@@ -14,4 +14,8 @@ angular.module('lifegraphApp')
             'AngularJS',
             'Karma'
         ];
+
+        $scope.straightenLine = function(){
+            window.straightenLine();
+        };
     });
