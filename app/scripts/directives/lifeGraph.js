@@ -43,77 +43,193 @@ angular.module('lifegraphApp')
         {
             id: 2,
             name: 'Good primary school, small',
-            kind: 1,
+            kind: 0,
         },
         {
             id: 3,
             name: 'Good secondary school, mixed, large',
-            kind: 1,
+            kind: 0,
         },
         {
             id: 4,
             name: 'Good A level grades',
-            kind: 1,
+            kind: 0,
         },
         {
             id: 5,
             name: 'University',
-            kind: 2,
+            kind: 0,
         },
         {
             id: 6,
-            name: 'Humanities course',
-            kind: 2,
+            name: 'Arts course',
+            kind: 0,
         },
         {
             id: 7,
             name: 'Switched course: to Law ',
-            kind: 2,
+            kind: 0,
         },
         {
             id: 8,
             name: 'Completed degree ',
-            kind: 2,
+            kind: 0,
         },
         {
             id: 9,
-            name: 'Travel',
-            kind: 2,
+            name: 'Career break: travel',
+            kind: 0,
         },
         {
             id: 10,
             name: 'Vocational training',
-            kind: 1,
+            kind: 0,
         },
                 {
             id: 11,
-            name: 'Apprenticeship',
-            kind: 1,
+            name: 'Good firm: Apprenticeship',
+            kind: 0,
         },
         {
-            id: 4,
-            name: 'Join good firm: junior level',
-            kind: 1,
+            id: 12,
+            name: 'Good firm: Lower management',
+            kind: 0,
         },
+        {
+            id: 13,
+            name: 'Career break: maternity',
+            kind: 0,
+        },
+        {
+            id: 14,
+            name: 'Good firm: mid level',
+            kind: 0,
+        },
+   //  CAREER - OPTIONS        
+        {
+            id: 15,
+            name: 'Rejoin at prev level - full time',
+            kind: 0,
+        },    
+        {
+            id: 16,
+            name: 'Look for part time options',
+            kind: 0,
+        },        
+        {
+            id: 17,
+            name: 'Try for promotion',
+            kind: 0,
+        }, 
+        {
+            id: 18,
+            name: 'Career break: travel',
+            kind: 0,
+        }, 
+        {
+            id: 19,
+            name: 'Retrain: new career',
+            kind: 0,
+        }, 
+// RELATIONSHIPS: family - KIND 1
+        {
+            id: 20,
+            name: 'Parents married: stable',
+            kind: 1,
+        }, 
+        {
+            id: 21,
+            name: 'Second child',
+            kind: 1,
+        }, 
+        {
+            id: 22,
+            name: 'Sibling born',
+            kind: 1,
+        }, 
+        {
+            id: 23,
+            name: 'Nursery school - enjoyed new people',
+            kind: 1,
+        }, 
+        {
+            id: 24,
+            name: 'Primary school - made friends',
+            kind: 1,
+        }, 
+        {
+            id: 25,
+            name: 'Secondary school - made friends',
+            kind: 1,
+        }, 
+        {
+            id: 26,
+            name: 'Began dating',
+            kind: 1,
+        }, 
+        {
+            id: 27,
+            name: 'University: end childhood relationship',
+            kind: 1,
+        }, 
+        {
+            id: 28,
+            name: 'University: serious boyfriend',
+            kind: 1,
+        }, 
+        {
+            id: 29,
+            name: 'Relationship break',
+            kind: 1,
+        }, 
+        {
+            id: 29,
+            name: 'Dating a colleague',
+            kind: 1,
+        }, 
+        {
+            id: 29,
+            name: 'Marry',
+            kind: 1,
+        }, 
+        {
+            id: 29,
+            name: 'First child',
+            kind: 1,
+        }, 
+
+
 
     ];
 
 
     var links = [
-        // this is CAREER
-        {source: 1, target: 0, value: 1},
+        // CAREER so far
+        {source: 0, target: 1, value: 0},
+        {source: 1, target: 2, value: 0},
+        {source: 2, target: 3, value: 0},
+        {source: 3, target: 4, value: 0},
+        {source: 4, target: 5, value: 0},
+        {source: 5, target: 6, value: 0},
+        {source: 6, target: 7, value: 0},
+        {source: 7, target: 8, value: 0},
+        {source: 8, target: 9, value: 0},
+        {source: 9, target: 10, value: 0},
+        {source: 10, target: 11, value: 0},
+        {source: 11, target: 12, value: 0},
+        {source: 12, target: 13, value: 0},
+        {source: 13, target: 14, value: 0},
+        // RELATIONSHPS so far
 
-        // this is professional life
-
-        {source: 3, target: 2, value: 1},
-        //{source: 4, target: 3, value: 1},
-
-        // this is relationship
-        {source: 6, target: 5, value: 1},
     ];
 
     var weakLinks = [
-        {source: 3, target: 0, value: 1}
+        // CAREER options
+        {source: 14, target: 15, value: 0},
+        {source: 14, target: 16, value: 0},
+        {source: 14, target: 17, value: 0},
+        {source: 14, target: 18, value: 0},
+        {source: 14, target: 19, value: 0},
     ];
 
     var domFuncs = (function(){
