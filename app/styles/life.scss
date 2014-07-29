@@ -55,6 +55,7 @@ body {
 .actions {
     @extend %floating;
     .more-info {
+        z-index: 11;
         display: none;
         @extend %floating;
         background: #FFF;
@@ -117,7 +118,11 @@ $health: #FEC92F;
         stroke: $health;
     }
     &.node-optional {
-        stroke: rgba(255, 255, 255, .5);
+        opacity: .5;
+    }
+    &.node-now {
+        stroke: red;
+        stroke-width: 15px;
     }
 }
 
@@ -139,6 +144,10 @@ $health: #FEC92F;
 }
 .line-weak {
     stroke-width: 2px;
+}
+.line-option {
+    stroke-width: 6px;
+    opacity: 0.5;
 }
 
 .graph-life {

@@ -105,43 +105,51 @@ angular.module('lifegraphApp')
             id: 14,
             name: 'Good firm: mid level',
             kind: 0,
+            css: 'node-now'
         },
    //  CAREER - OPTIONS
         {
             id: 15,
             name: 'Rejoin at prev level - full time',
             kind: 0,
+            css: 'node-optional'
         },
         {
             id: 16,
             name: 'Look for part time options',
             kind: 0,
+            css: 'node-optional'
         },
         {
             id: 17,
             name: 'Try for promotion',
             kind: 0,
+            css: 'node-optional'
         },
         {
             id: 18,
             name: 'Career break: travel',
             kind: 0,
+            css: 'node-optional'
         },
         {
             id: 19,
             name: 'Retrain: new career',
             kind: 0,
+            css: 'node-optional'
         }, 
 //  CAREER - OPTIONS IN PAST       
         {
             id: 20,
             name: 'Career break: gap year',
             kind: 0,
+            css: 'node-optional'
         },    
         {
             id: 21,
             name: 'Take any job - junior',
             kind: 0,
+            css: 'node-optional'
         },        
         {
             id: 22,
@@ -259,6 +267,7 @@ angular.module('lifegraphApp')
             id: 44,
             name: 'Reduced social life',
             kind: 1,
+            css: 'node-now'
         }, 
 
 
@@ -269,52 +278,62 @@ angular.module('lifegraphApp')
             id: 45,
             name: 'Separate from partner',
             kind: 1,
+            css: 'node-optional'
         }, 
         {
             id: 46,
             name: 'Strengthen social life',
             kind: 1,
+            css: 'node-optional'
         }, 
         {
             id: 47,
             name: 'Continue as I am',
             kind: 1,
+            css: 'node-optional'
         }, 
         {
             id: 48,
             name: 'Have another baby',
             kind: 1,
+            css: 'node-optional'
         }, 
         {
             id: 49,
             name: 'Separate from partner',
             kind: 1,
+            css: 'node-optional'
         }, 
 // RELATIONSHIPS: OPTIONS IN PAST
         {
             id: 50,
             name: 'Parents separated',
             kind: 1,
+            css: 'node-optional'
         }, 
         {
             id: 51,
             name: 'Unhappy socially',
             kind: 1,
+            css: 'node-optional'
         }, 
         {
             id: 52,
             name: 'Unhappy socially',
             kind: 1,
+            css: 'node-optional'
         }, 
         {
             id: 53,
             name: 'Continue as long distance relationship ',
             kind: 1,
+            css: 'node-optional'
         }, 
         {
             id: 54,
             name: 'Break up',
             kind: 1,
+            css: 'node-optional'
         }, 
 
     ];
@@ -738,7 +757,7 @@ angular.module('lifegraphApp')
                     .append('circle')
                     .attr('class', function(node){
                         console.log('node', node);
-                        return 'node node-'+kindNodes[node.kind].name.toLowerCase();
+                        return 'node node-'+kindNodes[node.kind].name.toLowerCase()+ ' ' +node.css;
                     })
                     .on('mouseout', actions.mouseOut)
                     .on('mousedown', actions.mouseDown)
@@ -788,7 +807,13 @@ angular.module('lifegraphApp')
                 svgLines
                     .enter()
                     .append('line')
-                    .attr('class', 'line')
+                    .attr('class', function(d){
+                        var extraCss = '';
+                        if (d.option) {
+                            extraCss += ' line-option';
+                        }
+                        return 'line' + extraCss;
+                    })
                     .attr('stroke', function(d){
                         var sourceKind = kindNodes[d.source.kind].name.toLowerCase();
                         var targetKind = kindNodes[d.target.kind].name.toLowerCase();
