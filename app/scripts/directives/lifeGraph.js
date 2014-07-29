@@ -6,16 +6,20 @@ angular.module('lifegraphApp')
 
 
     var kindNodes = [{
+            id: 0,
             name: 'Career',
             color: '#FEFBFF'
         },
         {
+            id: 1,
             name: 'Learning',
             color: '#1A9BF6'
         },{
+            id: 2,
             name: 'Relationships',
             color: '#F96521'
         },{
+            id: 3,
             name: 'Health',
             color: '#FEC92F'
         }
@@ -26,6 +30,7 @@ angular.module('lifegraphApp')
             id: 0,
             name: 'I was born',
             kind: 0,
+            strong: true
         },
         {
             id: 1,
@@ -62,13 +67,14 @@ angular.module('lifegraphApp')
 
     var links = [
         {source: 1, target: 0, value: 1},
-        {source: 0, target: 2, value: 1},
-        {source: 2, target: 1, value: 1},
-        {source: 3, target: 1, value: 1},
+        
+        {source: 3, target: 2, value: 1},
         {source: 4, target: 3, value: 1},
-        {source: 5, target: 0, value: 1},
+
         {source: 6, target: 5, value: 1},
     ];
+
+    var weakLinks = [];
 
     var domFuncs = (function(){
 
