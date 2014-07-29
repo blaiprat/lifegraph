@@ -8,16 +8,16 @@ angular.module('lifegraphApp')
     var kindNodes = [{
             id: 0,
             name: 'Career',
-            color: '#FEFBFF'
+            color: '#FFF'
         },
         {
             id: 1,
             name: 'Learning',
-            color: '#1A9BF6'
+            color: '#BFE2F3'
         },{
             id: 2,
             name: 'Relationships',
-            color: '#F96521'
+            color: '#F4D4D7'
         },{
             id: 3,
             name: 'Health',
@@ -26,51 +26,86 @@ angular.module('lifegraphApp')
     ];
 
     var nodes = [
+            // EDUCATION AND CAREER - KIND 0
         {
             id: 0,
-            name: 'I was born',
+            name: 'Born to parents with degree level education',
             kind: 0,
             strong: true
         },
         {
             id: 1,
-            name: 'My brother was born',
+            name: 'Nursery from age 6mths',
             kind: 0,
         },
         {
             id: 2,
-            name: 'I went to school',
+            name: 'Good primary school, small',
             kind: 1,
         },
         {
             id: 3,
-            name: 'I finished school',
+            name: 'Good secondary school, mixed, large',
             kind: 1,
         },
         {
             id: 4,
-            name: 'Went to college',
+            name: 'Good A level grades',
             kind: 1,
         },
         {
             id: 5,
-            name: 'I had my first girfriend',
+            name: 'University',
             kind: 2,
         },
         {
             id: 6,
-            name: 'I met my second girflriend',
+            name: 'Humanities course',
             kind: 2,
         },
+        {
+            id: 7,
+            name: 'Switched course: to Law ',
+            kind: 2,
+        },
+        {
+            id: 8,
+            name: 'Completed degree ',
+            kind: 2,
+        },
+        {
+            id: 9,
+            name: 'Travel',
+            kind: 2,
+        },
+        {
+            id: 10,
+            name: 'Vocational training',
+            kind: 1,
+        },
+                {
+            id: 11,
+            name: 'Apprenticeship',
+            kind: 1,
+        },
+        {
+            id: 4,
+            name: 'Join good firm: junior level',
+            kind: 1,
+        },
+
     ];
 
 
     var links = [
+        // this is CAREER
         {source: 1, target: 0, value: 1},
         
+        // this is professional life
         {source: 3, target: 2, value: 1},
-        {source: 4, target: 3, value: 1},
+        //{source: 4, target: 3, value: 1},
 
+        // this is relationship
         {source: 6, target: 5, value: 1},
     ];
 
