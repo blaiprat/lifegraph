@@ -2,15 +2,6 @@
 angular.module('lifegraphApp')
     .directive('graphLife', function() {
 
-    var optionsForNewNode = [
-        'Move to another company?',
-        'Move to another team?',
-        'Try for promotion?',
-        'Steady progress?',
-        'Create a new initiative?',
-        'Go part time?',
-        'Retrain?',
-    ];
 
     var transitionTime = 300;
     var nodes = [
@@ -281,60 +272,6 @@ angular.module('lifegraphApp')
 
             };
 
-
-            var popNodes = function(node){
-                var x = node.x,
-                    y = node.y;
-
-
-                var svgNodesPop = svgGroups.nodes.selectAll('.node-pop')
-                    .data(optionsForNewNode);
-
-
-                console.log('popping nodes', x, y);
-
-                //creation
-                svgNodesPop
-                    .enter()
-                    .append('g')
-                    .attr('class', 'node-pop')
-                    .attr('transform', 'translate('+x+', '+y+')')
-                    .attr('opacity', 0)
-                    .attr('y', y)
-                    .append('circle')
-                    .attr('r', 10)
-                    .on('mousedown', actions.mouseDownAlt)
-                    .on('mousemove', actions.mouseMove)
-                    .on('mouseup', actions.mouseUp);
-
-                svgNodesPop
-                    .append('text')
-                    .text(function(d){
-                        return d;
-                    })
-                    .attr('x', 20);
-
-                // remove
-                svgNodesPop
-                    .exit()
-                    .remove();
-
-
-
-                svgNodesPop
-                    .transition()
-                    .duration(300)
-                    .delay(function(d, i){
-                        return i * 25;
-                    })
-                    .attr('transform', function(d, i){
-                        var ny =y + (i * 50 - 30);
-                        return  'translate('+ (x + 75) +',' + ny+ ')';
-                    })
-                    .attr('opacity', 1);
-
-
-            };
 
             var hideNodes = function(){
                 var svgNodesPop = svgGroups.nodes.selectAll('.node-pop');
