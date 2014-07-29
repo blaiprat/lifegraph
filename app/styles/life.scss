@@ -48,6 +48,7 @@ body {
 .actions {
     @extend %floating;
     .more-info {
+        display: none;
         @extend %floating;
         background: #FFF;
         border-radius: 10px;
@@ -61,6 +62,7 @@ body {
         }
         p {
             margin-bottom: 0;
+            display: none;
         }
     }
 }
@@ -124,6 +126,9 @@ $health: #FEC92F;
 .line {
     // stroke: #FFF;
     stroke-width: 10px;
+}
+.line-weak {
+    stroke-width: 2px;
 }
 
 .graph-life {

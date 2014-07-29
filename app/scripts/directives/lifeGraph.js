@@ -25,13 +25,15 @@ angular.module('lifegraphApp')
         }
     ];
 
+
+
     var nodes = [
             // EDUCATION AND CAREER - KIND 0
         {
             id: 0,
             name: 'Born to parents with degree level education',
             kind: 0,
-            strong: true
+            fixed: true
         },
         {
             id: 1,
@@ -100,8 +102,9 @@ angular.module('lifegraphApp')
     var links = [
         // this is CAREER
         {source: 1, target: 0, value: 1},
-        
+
         // this is professional life
+
         {source: 3, target: 2, value: 1},
         //{source: 4, target: 3, value: 1},
 
@@ -109,7 +112,9 @@ angular.module('lifegraphApp')
         {source: 6, target: 5, value: 1},
     ];
 
-    var weakLinks = [];
+    var weakLinks = [
+        {source: 3, target: 0, value: 1}
+    ];
 
     var domFuncs = (function(){
 
@@ -159,7 +164,8 @@ angular.module('lifegraphApp')
         svg,
         svgGroups = {},
         svgNodes,
-        svgLines;
+        svgLines,
+        svgWeakLines;
 
 
     var prepareNodes = function(){
@@ -258,24 +264,24 @@ angular.module('lifegraphApp')
                 actions.mouseUp = function(e){
                     if (!actions.isMouseDown) { return; }
 
-                    var coords = d3.mouse(svgGroups.actions[0][0]);
-                    currentX = coords[0];
-                    currentY = coords[1];
+                    // var coords = d3.mouse(svgGroups.actions[0][0]);
+                    // currentX = coords[0];
+                    // currentY = coords[1];
 
                     actions.isMouseDown = false;
 
-                    if (e.name !== undefined && !isAddingNode){
-                        popNodes(e);
-                    } else if (optionsForNewNode.indexOf(e) !== -1){
-                        targetNode = addNode();
-                        targetNode.x = currentX;
-                        targetNode.y = currentY;
-                        buildNodes();
-                        buildLines();
-                    }
+                    // if (e.name !== undefined && !isAddingNode){
+                    //     popNodes(e);
+                    // } else if (optionsForNewNode.indexOf(e) !== -1){
+                    //     targetNode = addNode();
+                    //     targetNode.x = currentX;
+                    //     targetNode.y = currentY;
+                    //     buildNodes();
+                    //     buildLines();
+                    // }
 
                     isAddingNode = false;
-                    normalizeNodes();
+                    // normalizeNodes();
                     targetNode = undefined;
                 };
 
@@ -375,13 +381,34 @@ angular.module('lifegraphApp')
                 buildGradient('test', '#FFF', '#000');
             };
 
-            var force;
+            var force, drag;
             var buildScales = function(){
+
+
                 var tick = function() {
                     svgLines.attr('x1', function(d) { return d.source.x; })
                         .attr('y1', function(d) { return d.source.y; })
                         .attr('x2', function(d) { return d.target.x; })
                         .attr('y2', function(d) { return d.target.y; });
+
+                    svgWeakLines
+                        .attr('x1', function(d) {
+                            console.log('returnignt', nodes[d.source].x);
+                            return nodes[d.source].x;
+                            // return d.source.x;
+                        })
+                        .attr('y1', function(d) {
+                            return nodes[d.source].y;
+                            return d.source.y;
+                        })
+                        .attr('x2', function(d) {
+                            return nodes[d.target].x;
+                            return d.target.x;
+                        })
+                        .attr('y2', function(d) {
+                            return nodes[d.target].y;
+                            return d.target.y; }
+                        );
 
                     svgNodes.attr('cx', function(d) { return d.x; })
                         .attr('cy', function(d) { return d.y; });
@@ -391,14 +418,17 @@ angular.module('lifegraphApp')
 
                 force = d3.layout.force()
                     .size([settings.width, settings.height])
-                    .charge(-200)
+                    .charge(-400)
                     .linkDistance(60)
                     .on('tick', tick);
+
+                drag = force.drag();
 
                 force
                     .nodes(nodes)
                     .links(links)
                     .start();
+                
             };
 
             var buildNodes = function(){
@@ -417,7 +447,8 @@ angular.module('lifegraphApp')
                     .on('mouseout', actions.mouseOut)
                     .on('mousedown', actions.mouseDown)
                     .on('mousemove', actions.mouseMove)
-                    .on('mouseup', actions.mouseUp);
+                    .on('mouseup', actions.mouseUp)
+                    .call(drag);
 
                 // remove
                 svgNodes
@@ -470,6 +501,20 @@ angular.module('lifegraphApp')
                 svgLines
                     .exit()
                     .remove();
+
+                svgWeakLines = svgGroups.lines.selectAll('.line-weak')
+                    .data(weakLinks);
+
+                svgWeakLines
+                    .enter()
+                    .append('line')
+                    .attr('class', 'line-weak line')
+                    .attr('stroke', function(d){
+                        var sourceKind = kindNodes[nodes[d.source].kind].name.toLowerCase();
+                        var targetKind = kindNodes[nodes[d.target].kind].name.toLowerCase();
+                        return 'url(#'+sourceKind+'-'+targetKind+')';
+                    });
+
 
 
                 // svgLines
