@@ -5,6 +5,7 @@ angular.module('lifegraphApp')
     var isSelectingSomething = false;
 
 
+
     var kindNodes = [{
             id: 0,
             name: 'Career',
@@ -105,33 +106,34 @@ angular.module('lifegraphApp')
             name: 'Good firm: mid level',
             kind: 0,
         },
-//  CAREER - OPTIONS NOW       
+   //  CAREER - OPTIONS
         {
             id: 15,
             name: 'Rejoin at prev level - full time',
             kind: 0,
-        },    
+        },
         {
             id: 16,
             name: 'Look for part time options',
             kind: 0,
-        },        
+        },
         {
             id: 17,
             name: 'Try for promotion',
             kind: 0,
-        }, 
+        },
         {
             id: 18,
             name: 'Career break: travel',
             kind: 0,
-        }, 
+        },
         {
             id: 19,
             name: 'Retrain: new career',
             kind: 0,
         }, 
 //  CAREER - OPTIONS IN PAST       
+        },
         {
             id: 20,
             name: 'Career break: gap year',
@@ -187,37 +189,37 @@ angular.module('lifegraphApp')
             id: 30,
             name: 'Parents married: stable',
             kind: 1,
-        }, 
+        },
         {
             id: 31,
             name: 'Second child',
             kind: 1,
-        }, 
+        },
         {
             id: 32,
             name: 'Sibling born',
             kind: 1,
-        }, 
+        },
         {
             id: 33,
             name: 'Nursery school - enjoyed new people',
             kind: 1,
-        }, 
+        },
         {
             id: 34,
             name: 'Primary school - many friends',
             kind: 1,
-        }, 
+        },
         {
             id: 35,
             name: 'Secondary school - many friends',
             kind: 1,
-        }, 
+        },
         {
             id: 36,
             name: 'Began dating',
             kind: 1,
-        }, 
+        },
         {
             id: 37,
             name: 'Strong social life',
@@ -227,29 +229,27 @@ angular.module('lifegraphApp')
             id: 38,
             name: 'University: end childhood relationship',
             kind: 1,
-        }, 
+        },
         {
             id: 39,
             name: 'University: serious boyfriend',
             kind: 1,
-        }, 
+        },
         {
             id: 40,
             name: 'Relationship break',
             kind: 1,
         }, 
-
         {
             id: 41,
             name: 'Dating a colleague',
             kind: 1,
         }, 
-
         {
             id: 42,
             name: 'Marry',
             kind: 1,
-        }, 
+        },
         {
             id: 43,
             name: 'First child',
@@ -260,6 +260,7 @@ angular.module('lifegraphApp')
             name: 'Reduced social life',
             kind: 1,
         }, 
+
 
 
 
@@ -419,7 +420,7 @@ angular.module('lifegraphApp')
     })();
 
     var transitionTime = 300;
-    
+
 
 
     var settings = {},
@@ -462,6 +463,40 @@ angular.module('lifegraphApp')
 
     return {
         controller: function ($scope, $element) {
+            // GRAPH USER INTERACTIONS
+
+            var straightenLine = function(){
+                console.log('about to straightenLine', force);
+                // we stop the force field
+                force.stop();
+
+                var workWithNodesId = 0;
+
+                var mapedNodes = nodes.filter(function(node){
+                    var check1 = node.kind === workWithNodesId;
+                    return check1;
+                });
+
+                console.log('maped nodes?', mapedNodes);
+                // create a scale
+                var x = d3.scale.linear()
+                    .range([40, settings.width])
+                    .domain([0, mapedNodes.length]);
+
+
+
+                mapedNodes.forEach(function(node, index){
+                    node.x = x(index);
+                    node.y = 230 - index;
+                });
+
+                buildGraph(false);
+            };
+
+            window.straightenLine = straightenLine;
+
+            // END GRAPH USER INTERACTIOSN
+
 
             var normalizeNodes = function(){
                 var previousNode;
@@ -649,8 +684,8 @@ angular.module('lifegraphApp')
             var force, drag;
             var buildScales = function(){
 
-
-                var tick = function() {
+                var tick = function(e) {
+                    // console.log('e', e);
                     svgLines.attr('x1', function(d) { return d.source.x; })
                         .attr('y1', function(d) { return d.source.y; })
                         .attr('x2', function(d) { return d.target.x; })
@@ -658,22 +693,18 @@ angular.module('lifegraphApp')
 
                     svgWeakLines
                         .attr('x1', function(d) {
-                            console.log('returnignt', nodes[d.source].x);
                             return nodes[d.source].x;
                             // return d.source.x;
                         })
                         .attr('y1', function(d) {
                             return nodes[d.source].y;
-                            return d.source.y;
                         })
                         .attr('x2', function(d) {
                             return nodes[d.target].x;
-                            return d.target.x;
                         })
                         .attr('y2', function(d) {
                             return nodes[d.target].y;
-                            return d.target.y; }
-                        );
+                        });
 
                     svgNodes.attr('cx', function(d) { return d.x; })
                         .attr('cy', function(d) { return d.y; });
@@ -693,7 +724,7 @@ angular.module('lifegraphApp')
                     .nodes(nodes)
                     .links(links)
                     .start();
-                
+
             };
 
             var buildNodes = function(){
@@ -751,6 +782,8 @@ angular.module('lifegraphApp')
                 svgLines = svgGroups.lines.selectAll('.line')
                     .data(links);
 
+                var transitionDuration = (actions.isMouseDown) ? 0 : transitionTime;
+
                 // line creation
                 svgLines
                     .enter()
@@ -767,6 +800,26 @@ angular.module('lifegraphApp')
                     .exit()
                     .remove();
 
+                svgLines
+                    .transition()
+                    .duration(transitionDuration)
+                    .attr('x1', function(d) {
+                        console.log('d', d);
+                        return d.source.x;
+                        return nodes[d.source.id].x;
+                    })
+                    .attr('y1', function(d) {
+                        return d.source.y;
+                        return nodes[d.source.id].y;
+                    })
+                    .attr('x2', function(d) {
+                        return d.target.x;
+                        return nodes[d.target].x;
+                    })
+                    .attr('y2', function(d) {
+                        return d.target.y;
+                        return nodes[d.target].y;
+                    });
                 svgWeakLines = svgGroups.lines.selectAll('.line-weak')
                     .data(weakLinks);
 
@@ -801,7 +854,8 @@ angular.module('lifegraphApp')
             };
 
 
-            var buildGraph = function(){
+            var buildGraph = function(triggerForce){
+                triggerForce = (triggerForce === undefined) ? true : triggerForce;
                 updateSettings();
 
                 svg = svg || d3.select($element[0]).append('svg')
@@ -824,8 +878,9 @@ angular.module('lifegraphApp')
                 svgGroups.nodes = svgGroups.nodes || svg.append('g')
                     .attr('class', 'nodes');
 
-
-                buildScales();
+                if (triggerForce){
+                    buildScales();
+                }
                 buildGradients();
                 buildLines();
                 buildNodes();

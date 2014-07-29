@@ -32,13 +32,20 @@ body {
     top: 20px;
     left: 20px;
 }
+.graph {
+    position: absolute;
+    z-index: 2;
+}
 .header {
     @extend %floating;
+    z-index: 10;
+    h1 {
+        font-weight: 100;
+        max-width: 1020px;
+        margin: auto;
+        text-transform: uppercase;
+    }
     // left: 20px;
-    font-weight: 100;
-    max-width: 1020px;
-    margin: auto;
-    text-transform: uppercase;
 }
 
 .background {
