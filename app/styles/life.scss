@@ -116,6 +116,9 @@ $health: #FEC92F;
     &.node-health {
         stroke: $health;
     }
+    &.node-optional {
+        stroke: rgba(255, 255, 255, .5);
+    }
 }
 
 .node-pop {

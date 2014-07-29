@@ -146,6 +146,7 @@ angular.module('lifegraphApp')
         {
             id: 22,
             name: 'Stay with current course',
+            css: 'node-optional'
             kind: 0,
         }, 
         {
