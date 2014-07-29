@@ -15,7 +15,7 @@ angular.module('lifegraphApp')
     var transitionTime = 300;
     var nodes = [
         {
-            name: 'node1',
+            name: 'I was born',
             angle: 0,
             distance: 100,
             x: 100,
@@ -220,9 +220,30 @@ angular.module('lifegraphApp')
                 settings.height = window.innerHeight;
             };
 
-
+            var force;
             var buildScales = function(){
+                var tick = function() {
+                    svgLines.attr('x1', function(d) { return d.source.x; })
+                        .attr('y1', function(d) { return d.source.y; })
+                        .attr('x2', function(d) { return d.target.x; })
+                        .attr('y2', function(d) { return d.target.y; });
 
+                    svgNodes.attr('cx', function(d) { return d.x; })
+                        .attr('cy', function(d) { return d.y; });
+                };
+
+
+
+                force = d3.layout.force()
+                    .size([settings.width, settings.height])
+                    .charge(-400)
+                    .linkDistance(40)
+                    .on('tick', tick);
+
+                force
+                    .nodes(nodes)
+                    .links(links)
+                    .start();
             };
 
             var buildNodes = function(){
@@ -342,21 +363,21 @@ angular.module('lifegraphApp')
 
                 var transitionDuration = (actions.isMouseDown) ? 0 : transitionTime;
 
-                svgLines
-                    .transition()
-                    .duration(transitionDuration)
-                    .attr('x1', function(d){
-                        return nodes[d.source].x;
-                    })
-                    .attr('y1', function(d){
-                        return nodes[d.source].y;
-                    })
-                    .attr('x2', function(d){
-                        return nodes[d.target].x;
-                    })
-                    .attr('y2', function(d){
-                        return nodes[d.target].y;
-                    });
+                // svgLines
+                //     .transition()
+                //     .duration(transitionDuration)
+                //     .attr('x1', function(d){
+                //         return nodes[d.source].x;
+                //     })
+                //     .attr('y1', function(d){
+                //         return nodes[d.source].y;
+                //     })
+                //     .attr('x2', function(d){
+                //         return nodes[d.target].x;
+                //     })
+                //     .attr('y2', function(d){
+                //         return nodes[d.target].y;
+                //     });
 
             };
 

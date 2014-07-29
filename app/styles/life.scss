@@ -43,6 +43,7 @@ body {
 
 .background {
     @extend %floating;
+    display: none;
 }
 .actions {
     @extend %floating;
