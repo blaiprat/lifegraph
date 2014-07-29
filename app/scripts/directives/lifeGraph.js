@@ -370,8 +370,8 @@ angular.module('lifegraphApp')
         {source: 48, target: 44, value: 1, option: true},
 // RELATIONSHPS options in past
 
-
-
+// BRIDGING CAREER AND RELATIONSHIPS
+        {source: 12, target: 41, value: 1},
 
 
     ];
