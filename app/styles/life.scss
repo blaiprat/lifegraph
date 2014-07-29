@@ -48,10 +48,13 @@ body {
 .actions {
     @extend %floating;
     .more-info {
+        @extend %floating;
         background: #FFF;
         border-radius: 10px;
         color: $color-background;
         padding: 10px;
+        min-width: 200px;
+        max-width: 400px;
 
         h3 {
             margin-top: 0;
@@ -64,13 +67,45 @@ body {
 h1 {
     margin: 0;
 }
+/*
+ kindNodes = [{
+            name: 'Career',
+            color: '#FEFBFF'
+        },
+        {
+            name: 'Learning',
+            color: '#1A9BF6'
+        },{
+            name: 'Relationships',
+            color: '#F96521'
+        },{
+            name: 'Health',
+            color: '#FEC92F'
+        }
+    ]
+    */
 
+$career: #FFF;
+$learning: #1A9BF6;
+$relationships: #F96521;
+$health: #FEC92F;
 .node {
     fill: $color-background;
     stroke: #FFF;
     stroke-width: 10px;
-    &.node-dragged {
+    &.node-career {
         // pointer-events: none;
+        stroke: $career;
+    }
+
+    &.node-learning {
+        stroke: $learning;
+    }
+    &.node-relationships {
+        stroke: $relationships;
+    }
+    &.node-health {
+        stroke: $health;
     }
 }
 
@@ -87,7 +122,7 @@ h1 {
 }
 
 .line {
-    stroke: #FFF;
+    // stroke: #FFF;
     stroke-width: 10px;
 }
 

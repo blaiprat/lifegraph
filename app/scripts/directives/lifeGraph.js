@@ -2,33 +2,113 @@
 angular.module('lifegraphApp')
     .directive('graphLife', function() {
 
+    var isSelectingSomething = false;
 
-    var transitionTime = 300;
+
+    var kindNodes = [{
+            name: 'Career',
+            color: '#FEFBFF'
+        },
+        {
+            name: 'Learning',
+            color: '#1A9BF6'
+        },{
+            name: 'Relationships',
+            color: '#F96521'
+        },{
+            name: 'Health',
+            color: '#FEC92F'
+        }
+    ];
+
     var nodes = [
         {
+            id: 0,
             name: 'I was born',
-            angle: 0,
-            distance: 100,
-            x: 100,
-            y: 100
+            kind: 0,
         },
         {
-            name: 'node2',
-            distance: 100,
-            angle: 0,
+            id: 1,
+            name: 'My brother was born',
+            kind: 0,
         },
         {
-            name: 'node2',
-            distance: 100,
-            angle: 45,
-        }
+            id: 2,
+            name: 'I went to school',
+            kind: 1,
+        },
+        {
+            id: 3,
+            name: 'I finished school',
+            kind: 1,
+        },
+        {
+            id: 4,
+            name: 'Went to college',
+            kind: 1,
+        },
+        {
+            id: 5,
+            name: 'I had my first girfriend',
+            kind: 2,
+        },
+        {
+            id: 6,
+            name: 'I met my second girflriend',
+            kind: 2,
+        },
     ];
 
 
     var links = [
         {source: 1, target: 0, value: 1},
-        {source: 2, target: 1, value: 1}
+        {source: 0, target: 2, value: 1},
+        {source: 2, target: 1, value: 1},
+        {source: 3, target: 1, value: 1},
+        {source: 4, target: 3, value: 1},
+        {source: 5, target: 0, value: 1},
+        {source: 6, target: 5, value: 1},
     ];
+
+    var domFuncs = (function(){
+
+        var moreInfo,
+            moreInfoHeader,
+            moreInfoBody;
+
+        var init = function(){
+            moreInfo = document.querySelector('.more-info');
+            moreInfoHeader = document.querySelector('.more-info_header');
+            moreInfoBody = document.querySelector('.more-info_body');
+        };
+
+
+        var update = function(options) {
+            if (isSelectingSomething) {
+                hide();
+                return;
+            }
+            moreInfo.style.display = 'block';
+            moreInfo.style.top = options.y + 'px';
+            moreInfo.style.left = options.x + 'px';
+            moreInfoHeader.textContent = options.header;
+            moreInfoBody.textContent = options.description;
+        };
+
+        var hide = function(){
+            moreInfo.style.display = 'none';
+        };
+
+        init();
+        return {
+            init: init,
+            update: update,
+            hide: hide
+        };
+    })();
+
+    var transitionTime = 300;
+    
 
 
     var settings = {},
@@ -89,7 +169,6 @@ angular.module('lifegraphApp')
 
                         node.angle = roundedAngle;
 
-                        console.log('distance', distance);
                         node.distance = distance;
 
                     }
@@ -110,10 +189,14 @@ angular.module('lifegraphApp')
                     targetNode,
                     isAddingNode = false;
 
+                actions.mouseOut = function(){
+                    domFuncs.hide();
+                };
+
+
                 actions.mouseDown = function(e, d, a){
                     actions.isMouseDown = true;
                     currentNode = e;
-                    console.log('e', e, d, a);
                 };
 
                 actions.mouseDownAlt = function(){
@@ -148,11 +231,9 @@ angular.module('lifegraphApp')
                         targetNode.y = currentY;
                         buildNodes();
                         buildLines();
-                        console.log('its a new node', targetNode, currentX, currentY);
                     }
 
                     isAddingNode = false;
-                    console.log('mouse is up');
                     normalizeNodes();
                     targetNode = undefined;
                 };
@@ -163,7 +244,12 @@ angular.module('lifegraphApp')
                     currentY = coords[1];
 
                     if (e && e.name){
-                        console.log('e.name', e.name);
+                        domFuncs.update({
+                            header: e.name,
+                            description: e.description,
+                            x: currentX,
+                            y: currentY
+                        });
                     }
 
                 };
@@ -211,6 +297,43 @@ angular.module('lifegraphApp')
                 settings.height = window.innerHeight;
             };
 
+            var buildGradients = function(){
+
+                svgGroups.defs = svg.append('svg:defs');
+                var buildGradient = function(name, colour1, colour2){
+
+                    var gradient = svgGroups.defs
+                        .append('svg:linearGradient')
+                        .attr('id', name)
+                        .attr('x1', '100%')
+                        .attr('y1', '0%')
+                        .attr('x2', '0%')
+                        .attr('y2', '0%')
+                        .attr('spreadMethod', 'pad');
+
+                    gradient.append('svg:stop')
+                        .attr('offset', '0%')
+                        .attr('stop-color', colour1)
+                        .attr('stop-opacity', 1);
+
+                    gradient.append('svg:stop')
+                        .attr('offset', '100%')
+                        .attr('stop-color', colour2)
+                        .attr('stop-opacity', 1);
+
+
+                };
+
+                kindNodes.forEach(function(kindSource){
+                    kindNodes.forEach(function(kindTarget){
+                        var sourceName = kindSource.name.toLowerCase();
+                        var targetName = kindTarget.name.toLowerCase();
+                        buildGradient(sourceName+'-'+targetName, kindSource.color, kindTarget.color);
+                    });
+                });
+                buildGradient('test', '#FFF', '#000');
+            };
+
             var force;
             var buildScales = function(){
                 var tick = function() {
@@ -227,8 +350,8 @@ angular.module('lifegraphApp')
 
                 force = d3.layout.force()
                     .size([settings.width, settings.height])
-                    .charge(-400)
-                    .linkDistance(40)
+                    .charge(-200)
+                    .linkDistance(60)
                     .on('tick', tick);
 
                 force
@@ -246,7 +369,11 @@ angular.module('lifegraphApp')
                 svgNodes
                     .enter()
                     .append('circle')
-                    .attr('class', 'node')
+                    .attr('class', function(node){
+                        console.log('node', node);
+                        return 'node node-'+kindNodes[node.kind].name.toLowerCase();
+                    })
+                    .on('mouseout', actions.mouseOut)
                     .on('mousedown', actions.mouseDown)
                     .on('mousemove', actions.mouseMove)
                     .on('mouseup', actions.mouseUp);
@@ -291,14 +418,18 @@ angular.module('lifegraphApp')
                 svgLines
                     .enter()
                     .append('line')
-                    .attr('class', 'line');
+                    .attr('class', 'line')
+                    .attr('stroke', function(d){
+                        var sourceKind = kindNodes[d.source.kind].name.toLowerCase();
+                        var targetKind = kindNodes[d.target.kind].name.toLowerCase();
+                        return 'url(#'+sourceKind+'-'+targetKind+')';
+                    });
 
                 // line removing
                 svgLines
                     .exit()
                     .remove();
 
-                var transitionDuration = (actions.isMouseDown) ? 0 : transitionTime;
 
                 // svgLines
                 //     .transition()
@@ -344,6 +475,7 @@ angular.module('lifegraphApp')
 
 
                 buildScales();
+                buildGradients();
                 buildLines();
                 buildNodes();
 
