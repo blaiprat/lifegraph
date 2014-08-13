@@ -25,6 +25,9 @@ body {
     background: $color-background;
     font-family: $font-family-lato;
     color: #FFF;
+    background-image: url('../images/assets-journey/nav-2-lit.png');
+    background-repeat: no-repeat;
+    background-position: 70px 140px;
 }
 
 %floating {
@@ -43,9 +46,13 @@ body {
         font-weight: 100;
         max-width: 1020px;
         margin: auto;
-        text-transform: uppercase;
     }
     // left: 20px;
+}
+.focus-on {
+    left: 70PX;
+    top: 86PX;
+    position: relative;
 }
 
 .background {
@@ -98,7 +105,8 @@ h1 {
 $career: #FFF;
 $learning: #BFE2F3;
 $relationships: #F4D4D7;
-$health: #FEC92F;
+$health: red;
+$healthfactors: red;
 .node {
     fill: $color-background;
     stroke: #FFF;
@@ -110,19 +118,42 @@ $health: #FEC92F;
 
     &.node-learning {
         stroke: $learning;
+        stroke-width: 3px;
     }
     &.node-relationships {
         stroke: $relationships;
+        stroke-width: 3px;
     }
     &.node-health {
         stroke: $health;
+        stroke-width: 3px;
     }
     &.node-optional {
-        opacity: .5;
+        opacity: .3;
+        stroke-width: 10px;
     }
     &.node-now {
-        stroke: red;
+        stroke-width: 45px;
+        display: initial;
+    }
+    &.node-option-now {
+        opacity: 1;
+        display: initial;
+    }
+    &.node-future {
+        opacity: .5;
+    }
+    &.node-birth {
         stroke-width: 15px;
+    }
+    &.node-factor {
+        stroke: $health;
+        opacity: 1;
+       
+    }
+    &.node-main {
+        stroke: grey;
+        stroke-width: 25px;
     }
 }
 
